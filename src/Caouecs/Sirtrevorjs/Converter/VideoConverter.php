@@ -7,6 +7,7 @@
 
 namespace Caouecs\Sirtrevorjs\Converter;
 
+use Caouecs\Sirtrevorjs\Contracts\ConverterInterface;
 use Exception;
 use Config;
 
@@ -15,7 +16,7 @@ use Config;
  *
  * @package Caouecs\Sirtrevorjs\Converter
  */
-class VideoConverter extends BaseConverter
+class VideoConverter extends BaseConverter implements ConverterInterface
 {
     /**
      * Provider name
@@ -110,6 +111,11 @@ class VideoConverter extends BaseConverter
         $this->remote_id = $data['remote_id'];
         $this->caption = array_get($data, 'caption');
         $this->config = Config::get("sirtrevorjs::sir-trevor-js");
+    }
+
+    public function render(&$codejs)
+    {
+        return $this->videoToHtml($codejs);
     }
 
     /**
