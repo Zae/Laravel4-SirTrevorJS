@@ -41,6 +41,7 @@ class SirTrevorJsConverter
         "tweet"         => "Social",
         "video"         => "Video",
         "list"          => "Text",
+        "image_caption" => "ImageCaption",
     ];
 
     /**
