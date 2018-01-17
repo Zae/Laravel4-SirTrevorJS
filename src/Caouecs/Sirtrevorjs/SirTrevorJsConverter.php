@@ -49,7 +49,7 @@ class SirTrevorJsConverter
      */
     public function __construct()
     {
-        $this->config = Config::get("sirtrevorjs::sir-trevor-js");
+        $this->config = Config::get("sir-trevor-js");
     }
 
     /**
