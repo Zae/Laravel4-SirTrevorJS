@@ -27,11 +27,9 @@ class SirtrevorjsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->package('caouecs/sirtrevorjs');
-
         include __DIR__.'/../../routes.php';
 
-        View::addNamespace('sirtrevorjs', __DIR__.'/../../views/');
+        $this->loadViewsFrom(__DIR__.'/../../views/', 'sirtrevorjs');
     }
 
     /**
