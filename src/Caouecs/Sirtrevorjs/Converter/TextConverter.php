@@ -45,6 +45,7 @@ class TextConverter extends BaseConverter implements ConverterInterface
     public function __construct($config, $data)
     {
         $this->markdown = new ParsedownExtra();
+        $this->markdown->setBreaksEnabled(true);
 
         parent::__construct($config, $data);
     }
