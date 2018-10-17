@@ -61,7 +61,7 @@ class TextConverter extends BaseConverter implements ConverterInterface
             $text = $this->data['text'];
         } else {
             /** This replacement happens to prevent a spacing issues between headers (**header**) in a markdown text */
-            $this->data['text'] = str_replace('**\n', '**', $this->data['text']);
+            $this->data['text'] = str_replace("**\n", '** <br>', $this->data['text']);
             $text = $this->markdown->text($this->data['text']);
         }
 
