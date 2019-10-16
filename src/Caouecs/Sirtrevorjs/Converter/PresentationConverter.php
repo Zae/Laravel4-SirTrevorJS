@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -8,6 +10,7 @@
 namespace Caouecs\Sirtrevorjs\Converter;
 
 use Caouecs\Sirtrevorjs\Contracts\ConverterInterface;
+use Illuminate\Contracts\View\View;
 
 /**
  * Presentation for Sir Trevor Js.
@@ -20,19 +23,19 @@ class PresentationConverter extends BaseConverter implements ConverterInterface
      * @var array
      */
     protected $types = [
-        "slideshare",
-        "issuu",
+        'slideshare',
+        'issuu',
     ];
 
     /**
      * Slideshare.
      *
-     * @return string
+     * @return View;
      */
-    public function slideshareToHtml()
+    public function slideshareToHtml(): View
     {
-        return $this->view("presentation.slideshare", [
-            "remote_id" => $this->data['remote_id'],
+        return $this->view('presentation.slideshare', [
+            'remote_id' => $this->data['remote_id'],
         ]);
     }
 
@@ -41,14 +44,14 @@ class PresentationConverter extends BaseConverter implements ConverterInterface
      *
      * @param array $codejs Array of js
      *
-     * @return string
+     * @return View
      */
-    public function issuuToHtml(&$codejs)
+    public function issuuToHtml(&$codejs): View
     {
         $codejs['issuu'] = '<script type="text/javascript" src="//e.issuu.com/embed.js" async="true"></script>';
 
-        return $this->view("presentation.issuu", [
-            "remote_id" => $this->data['remote_id'],
+        return $this->view('presentation.issuu', [
+            'remote_id' => $this->data['remote_id'],
         ]);
     }
 }

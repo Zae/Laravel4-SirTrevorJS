@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -7,7 +9,9 @@
 
 namespace Caouecs\Sirtrevorjs;
 
-use Config;
+use Illuminate\Config\Repository;
+use function array_key_exists;
+use function is_array;
 
 /**
  * Class Converter.
@@ -23,33 +27,32 @@ class SirTrevorJsConverter
      * @var array
      */
     protected $blocks = [
-        "blockquote"    => "Text",
-        "embedly"       => "Embedly",
-        "facebook"      => "Social",
-        "gettyimages"   => "Image",
-        "heading"       => "Text",
-        "image"         => "Image",
-        "issuu"         => "Presentation",
-        "markdown"      => "Text",
-        "pinterest"     => "Image",
-        "quote"         => "Text",
-        "sketchfab"     => "Modelisation",
-        "slideshare"    => "Presentation",
-        "soundcloud"    => "Sound",
-        "spotify"       => "Sound",
-        "text"          => "Text",
-        "tweet"         => "Social",
-        "video"         => "Video",
-        "list"          => "Text",
-        "image_caption" => "ImageCaption",
+        'blockquote'    => 'Text',
+        'embedly'       => 'Embedly',
+        'facebook'      => 'Social',
+        'gettyimages'   => 'Image',
+        'heading'       => 'Text',
+        'image'         => 'Image',
+        'issuu'         => 'Presentation',
+        'markdown'      => 'Text',
+        'pinterest'     => 'Image',
+        'quote'         => 'Text',
+        'sketchfab'     => 'Modelisation',
+        'slideshare'    => 'Presentation',
+        'soundcloud'    => 'Sound',
+        'spotify'       => 'Sound',
+        'text'          => 'Text',
+        'video'         => 'Video',
+        'list'          => 'Text',
+        'image_caption' => 'ImageCaption',
     ];
 
     /**
-     * Construct.
+     * @param Repository $config
      */
-    public function __construct()
+    public function __construct(Repository $config)
     {
-        $this->config = Config::get("sir-trevor-js");
+        $this->config = $config->get('sir-trevor-js');
     }
 
     /**
@@ -58,8 +61,9 @@ class SirTrevorJsConverter
      * @param string $json
      *
      * @return string
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function toHtml($json)
+    public function toHtml($json): string
     {
         // convert the json to an associative array
         $input = json_decode($json, true);
@@ -74,9 +78,9 @@ class SirTrevorJsConverter
                     break;
                 }
 
-                $class = "Caouecs\\Sirtrevorjs\\Converter\\".$this->blocks[$block['type']]."Converter";
+                $class = "Caouecs\\Sirtrevorjs\\Converter\\" . $this->blocks[$block['type']] . 'Converter';
 
-                $converter = new $class($this->config, $block);
+                $converter = app()->make($class, [$this->config, $block]);
                 $html .= $converter->render($codejs);
             }
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -8,6 +10,8 @@
 namespace Caouecs\Sirtrevorjs\Converter;
 
 use Caouecs\Sirtrevorjs\Contracts\ConverterInterface;
+use Illuminate\Support\Arr;
+use Illuminate\Contracts\View\View;
 
 /**
  * Images for Sir Trevor Js.
@@ -20,39 +24,39 @@ class ImageConverter extends BaseConverter implements ConverterInterface
      * @var array
      */
     protected $types = [
-        "image",
-        "gettyimages",
-        "pinterest",
+        'image',
+        'gettyimages',
+        'pinterest',
     ];
 
     /**
      * Converts the image to html.
      *
-     * @return string
+     * @return string|View
      */
     public function imageToHtml()
     {
-        if (is_null(array_get($this->data, 'file.url'))) {
-            return;
+        if (Arr::get($this->data, 'file.url') === null) {
+            return '';
         }
 
-        return $this->view("image.image", [
-            "url"  => array_get($this->data, 'file.url'),
-            "text" => array_get($this->data, 'text'),
+        return $this->view('image.image', [
+            'url'   => Arr::get($this->data, 'file.url'),
+            'text'  => Arr::get($this->data, 'text'),
         ]);
     }
 
     /**
      * Converts GettyImage to html.
      *
-     * @return string
+     * @return string|View
      */
     public function gettyimagesToHtml()
     {
-        return $this->view("image.gettyimages", [
-            "remote_id" => $this->data['remote_id'],
-            "width"     => array_get($this->config, 'gettyimages.width', 594),
-            "height"    => array_get($this->config, 'gettyimages.height', 465),
+        return $this->view('image.gettyimages', [
+            'remote_id' => $this->data['remote_id'],
+            'width'     => Arr::get($this->config, 'gettyimages.width', 594),
+            'height'    => Arr::get($this->config, 'gettyimages.height', 465),
         ]);
     }
 
@@ -61,22 +65,19 @@ class ImageConverter extends BaseConverter implements ConverterInterface
      *
      * @param array $codejs Array of js
      *
-     * @return string
+     * @return string|View
      */
     public function pinterestToHtml(&$codejs)
     {
-        /*
-         * Pin
-         */
-        if ($this->data['provider'] === "pin") {
+        if ($this->data['provider'] === 'pin') {
             $codejs['pin'] = '<script type="text/javascript" async src="//assets.pinterest.com/js/pinit.js">'
                 .'</script>';
 
-            return $this->view("image.pin", [
-                "remote_id" => $this->data['remote_id'],
+            return $this->view('image.pin', [
+                'remote_id' => $this->data['remote_id'],
             ]);
         }
 
-        return;
+        return '';
     }
 }

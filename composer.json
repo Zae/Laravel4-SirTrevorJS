@@ -10,19 +10,30 @@
     }
   ],
   "require": {
-    "illuminate/support": "~5",
+    "php": ">=7.2",
+    "ext-json": "*",
+    "laravel/framework": "^6.0.0",
     "erusev/parsedown-extra": "~0.2",
-    "thujohn/twitter": "~2.0.0"
+    "laravelcollective/html": "^6.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "4.1.*"
+    "phpunit/phpunit": "^8.0.0"
   },
   "autoload": {
+    "psr-4": {
+      "Caouecs\\": "src/Caouecs"
+    }
+  },
+  "autoload-dev": {
     "classmap": [
       "test"
-    ],
-    "psr-0": {
-      "Caouecs\\Sirtrevorjs\\": "src/"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Caouecs\\Sirtrevorjs\\SirtrevorjsServiceProvider"
+      ]
     }
   }
 }

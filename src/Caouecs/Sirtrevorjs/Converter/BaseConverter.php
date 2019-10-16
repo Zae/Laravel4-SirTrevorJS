@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -7,7 +9,10 @@
 
 namespace Caouecs\Sirtrevorjs\Converter;
 
-use View;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use function in_array;
 
 /**
  * Base of converters for Sir Trevor Js.
@@ -41,10 +46,11 @@ class BaseConverter
      * @param array $config Config of Sir Trevor Js
      * @param array $data   Data of element
      */
-    public function __construct($config, $data)
+    public function __construct(array $config, array $data)
     {
-        $this->type = array_get($data, 'type');
-        $this->data = array_get($data, 'data');
+        $this->type = Arr::get($data, 'type');
+        $this->data = Arr::get($data, 'data');
+
         $this->config = $config;
     }
 
@@ -55,15 +61,15 @@ class BaseConverter
      *
      * @return string
      */
-    public function render(&$codejs)
+    public function render(&$codejs): string
     {
-        if (in_array($this->type, $this->types)) {
-            $method = $this->type."ToHtml";
+        if (in_array($this->type, $this->types, true)) {
+            $method = Str::camel($this->type) . 'ToHtml';
 
             return $this->$method($codejs);
         }
 
-        return;
+        return '';
     }
 
     /**
@@ -71,13 +77,15 @@ class BaseConverter
      *
      * @param string $viewName Name of the base view
      * @param array  $params   Params
+     *
+     * @return View
      */
-    public function view($viewName, $params = [])
+    public function view(string $viewName, array $params = []): View
     {
-        if (isset($this->config['view']) && View::exists($this->config['view'].".".$viewName)) {
-            return View::make($this->config['view'].".".$viewName, $params);
+        if (isset($this->config['view']) && view()->exists($this->config['view'] . '.' . $viewName)) {
+            return view()->make($this->config['view'] . '.' . $viewName, $params);
         }
 
-        return View::make("sirtrevorjs::".$viewName, $params);
+        return view()->make('sirtrevorjs::' . $viewName, $params);
     }
 }

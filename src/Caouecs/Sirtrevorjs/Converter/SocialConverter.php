@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -8,6 +10,7 @@
 namespace Caouecs\Sirtrevorjs\Converter;
 
 use Caouecs\Sirtrevorjs\Contracts\ConverterInterface;
+use Illuminate\Contracts\View\View;
 
 /**
  * Social Network for Sir Trevor Js.
@@ -20,38 +23,25 @@ class SocialConverter extends BaseConverter implements ConverterInterface
      * @var array
      */
     protected $types = [
-        "tweet",
-        "facebook",
+        'facebook',
     ];
-
-    /**
-     * Tweet.
-     *
-     * @return string
-     */
-    public function tweetToHtml()
-    {
-        return $this->view("social.tweet", [
-            "data" => $this->data,
-        ]);
-    }
 
     /**
      * Facebook.
      *
      * @param array $codejs Array of js
      *
-     * @return string
+     * @return View;
      */
-    public function facebookToHtml(&$codejs)
+    public function facebookToHtml(&$codejs): View
     {
         $codejs['facebook'] = '<script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if '
             .'(d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/'
             .'en_GB/all.js#xfbml=1";fjs.parentNode.insertBefore(js, fjs);}(document,\'script\',\'facebook-jssdk\'));'
             .'</script>';
 
-        return $this->view("social.facebook", [
-            "data" => $this->data,
+        return $this->view('social.facebook', [
+            'data' => $this->data,
         ]);
     }
 }

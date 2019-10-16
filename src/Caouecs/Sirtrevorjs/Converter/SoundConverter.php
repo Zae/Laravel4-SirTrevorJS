@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -8,6 +10,7 @@
 namespace Caouecs\Sirtrevorjs\Converter;
 
 use Caouecs\Sirtrevorjs\Contracts\ConverterInterface;
+use Illuminate\Contracts\View\View;
 
 /**
  * Sound for Sir Trevor Js.
@@ -20,34 +23,34 @@ class SoundConverter extends BaseConverter implements ConverterInterface
      * @var array
      */
     protected $types = [
-        "soundcloud",
-        "spotify",
+        'soundcloud',
+        'spotify',
     ];
 
     /**
      * Soundcloud block.
      *
-     * @return string
+     * @return View;
      */
-    public function soundcloudToHtml()
+    public function soundcloudToHtml(): View
     {
-        $theme = (isset($this->config['soundcloud']) && $this->config['soundcloud'] === "full") ? "full" : "small";
+        $theme = (isset($this->config['soundcloud']) && $this->config['soundcloud'] === 'full') ? 'full' : 'small';
 
-        return $this->view("sound.soundcloud.".$theme, [
-            "remote" => $this->data['remote_id'],
+        return $this->view('sound.soundcloud.' . $theme, [
+            'remote' => $this->data['remote_id'],
         ]);
     }
 
     /**
      * Spotify block.
      *
-     * @return string
+     * @return View
      */
-    public function spotifyToHtml()
+    public function spotifyToHtml(): View
     {
-        return $this->view("sound.spotify", [
-            "remote"  => $this->data['remote_id'],
-            "options" => $this->config['spotify'],
+        return $this->view('sound.spotify', [
+            'remote'    => $this->data['remote_id'],
+            'options'   => $this->config['spotify'],
         ]);
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -8,6 +10,7 @@
 namespace Caouecs\Sirtrevorjs\Converter;
 
 use Caouecs\Sirtrevorjs\Contracts\ConverterInterface;
+use Illuminate\Contracts\View\View;
 
 /**
  * Modelisation for Sir Trevor Js.
@@ -20,18 +23,18 @@ class ModelisationConverter extends BaseConverter implements ConverterInterface
      * @var array
      */
     protected $types = [
-        "sketchfab",
+        'sketchfab',
     ];
 
     /**
      * Sketchfab block.
      *
-     * @return string
+     * @return View
      */
-    public function sketchfabToHtml()
+    public function sketchfabToHtml(): View
     {
-        return $this->view("modelisation.sketchfab", [
-            "remote_id" => $this->data['remote_id'],
+        return $this->view('modelisation.sketchfab', [
+            'remote_id' => $this->data['remote_id'],
         ]);
     }
 }

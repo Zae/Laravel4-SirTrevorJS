@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -8,6 +10,7 @@
 namespace Caouecs\Sirtrevorjs\Converter;
 
 use Caouecs\Sirtrevorjs\Contracts\ConverterInterface;
+use Illuminate\Contracts\View\View;
 use ParsedownExtra;
 
 /**
@@ -18,7 +21,7 @@ class TextConverter extends BaseConverter implements ConverterInterface
     /**
      * Markdown.
      *
-     * @var Markdown
+     * @var ParsedownExtra
      */
     protected $markdown;
 
@@ -28,12 +31,12 @@ class TextConverter extends BaseConverter implements ConverterInterface
      * @var array
      */
     protected $types = [
-        "text",
-        "markdown",
-        "quote",
-        "blockquote",
-        "heading",
-        "list",
+        'text',
+        'markdown',
+        'quote',
+        'blockquote',
+        'heading',
+        'list',
     ];
 
     /**
@@ -41,10 +44,12 @@ class TextConverter extends BaseConverter implements ConverterInterface
      *
      * @param array $config Config of Sir Trevor Js
      * @param array $data   Array of data
+     *
+     * @throws \Exception
      */
     public function __construct($config, $data)
     {
-        $this->markdown = new ParsedownExtra();
+        $this->markdown = app()->make(ParsedownExtra::class);
         $this->markdown->setBreaksEnabled(true);
 
         parent::__construct($config, $data);
@@ -53,9 +58,9 @@ class TextConverter extends BaseConverter implements ConverterInterface
     /**
      * Convert text from markdown or html.
      *
-     * @return string
+     * @return View
      */
-    public function textToHtml()
+    public function textToHtml(): View
     {
         if (isset($this->data['isHtml']) && $this->data['isHtml']) {
             $text = $this->data['text'];
@@ -65,17 +70,17 @@ class TextConverter extends BaseConverter implements ConverterInterface
             $text = $this->markdown->text($this->data['text']);
         }
 
-        return $this->view("text.text", [
-            "text" => $text,
+        return $this->view('text.text', [
+            'text' => $text,
         ]);
     }
 
     /**
      * Convert text from markdown.
      *
-     * @return string
+     * @return View
      */
-    public function markdownToHtml()
+    public function markdownToHtml(): View
     {
         return $this->textToHtml();
     }
@@ -83,35 +88,35 @@ class TextConverter extends BaseConverter implements ConverterInterface
     /**
      * Convert heading.
      *
-     * @return string
+     * @return View
      */
-    public function headingToHtml()
+    public function headingToHtml(): View
     {
-        return $this->view("text.heading", [
-            "text" => $this->markdown->text($this->data['text']),
+        return $this->view('text.heading', [
+            'text' => $this->markdown->text($this->data['text']),
         ]);
     }
 
     /**
      * Converts block quotes to html.
      *
-     * @return string
+     * @return View
      */
-    public function blockquoteToHtml()
+    public function blockquoteToHtml(): View
     {
         // remove the indent thats added by Sir Trevor
-        return $this->view("text.blockquote", [
-            "cite" => $this->data['cite'],
-            "text" => $this->markdown->text(ltrim($this->data['text'], '>')),
+        return $this->view('text.blockquote', [
+            'cite' => $this->data['cite'],
+            'text' => $this->markdown->text(ltrim($this->data['text'], '>')),
         ]);
     }
 
     /**
      * Converts quote to html.
      *
-     * @return string
+     * @return View
      */
-    public function quoteToHtml()
+    public function quoteToHtml(): View
     {
         return $this->blockquoteToHtml();
     }
@@ -119,9 +124,9 @@ class TextConverter extends BaseConverter implements ConverterInterface
 	/**
      * Converts list to html.
      *
-     * @return string
+     * @return View
      */
-    public function listToHtml()
+    public function listToHtml(): View
     {
         return $this->textToHtml();
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -7,9 +9,7 @@
 
 namespace Caouecs\Sirtrevorjs;
 
-use Config;
-use HTML;
-use View;
+use function is_array;
 
 /**
  * Sir Trevor Js.
@@ -22,7 +22,7 @@ class SirTrevorJs
      * @var string
      * @static
      */
-    protected static $class = "sir-trevor";
+    protected static $class = 'sir-trevor';
 
     /**
      * Block types.
@@ -38,7 +38,7 @@ class SirTrevorJs
      * @var string
      * @static
      */
-    protected static $language = "en";
+    protected static $language = 'en';
 
     /**
      * Upload url for images.
@@ -46,7 +46,7 @@ class SirTrevorJs
      * @var string
      * @static
      */
-    protected static $uploadUrl = "/sirtrevorjs/upload";
+    protected static $uploadUrl = '/sirtrevorjs/upload';
 
     /**
      * Url for tweets.
@@ -54,7 +54,7 @@ class SirTrevorJs
      * @var string
      * @static
      */
-    protected static $tweetUrl = "/sirtrevorjs/tweet";
+    protected static $tweetUrl = '/sirtrevorjs/tweet';
 
     /**
      * Transform text with image bug.
@@ -64,7 +64,7 @@ class SirTrevorJs
      * @return string
      * @static
      */
-    public static function transformText($txt)
+    public static function transformText($txt): string
     {
         $txt = json_decode($txt, true);
 
@@ -78,20 +78,20 @@ class SirTrevorJs
                  * This code transforms this array into a string (JSON format)
                  * and after it transforms it into an another array for Sir Trevor
                  */
-                if ($data['type'] === "image" && !isset($data['data']['file'])) {
+                if ($data['type'] === 'image' && !isset($data['data']['file'])) {
                     $return[] = [
-                        "type" => "image",
-                        "data" => json_decode(implode($data['data']), true),
+                        'type' => 'image',
+                        'data' => json_decode(implode($data['data']), true),
                     ];
                 } else {
                     $return[] = $data;
                 }
             }
 
-            return json_encode(["data" => $return], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            return json_encode(['data' => $return], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         }
 
-        return;
+        return '';
     }
 
     /**
@@ -101,16 +101,16 @@ class SirTrevorJs
      * @return string
      * @static
      */
-    public static function stylesheets()
+    public static function stylesheets(): string
     {
         // params in config file
-        $config = Config::get("sirtrevorjs::sir-trevor-js");
+        $config = config()->get('sirtrevorjs::sir-trevor-js');
 
         /*
          * Files of Sir Trevor JS
          */
-        $return = HTML::style($config['path']."sir-trevor-icons.css")
-            .HTML::style($config['path']."sir-trevor.css");
+        $return = Html::style($config['path'] . 'sir-trevor-icons.css')
+            .Html::style($config['path'] . 'sir-trevor.css');
 
         /*
          * Others files if you need it
@@ -118,7 +118,7 @@ class SirTrevorJs
         if (isset($config['stylesheet']) && is_array($config['stylesheet'])) {
             foreach ($config['stylesheet'] as $arr) {
                 if (file_exists(public_path($arr))) {
-                    $return .= HTML::style($arr);
+                    $return .= Html::style($arr);
                 }
             }
         }
@@ -141,7 +141,7 @@ class SirTrevorJs
      * - uploadUrl
      * - tweetUrl
      */
-    public static function scripts(array $params = [])
+    public static function scripts(array $params = []): string
     {
         // params
         $config = self::config($params);
@@ -153,17 +153,17 @@ class SirTrevorJs
         if (isset($config['script']) && is_array($config['script'])) {
             foreach ($config['script'] as $arr) {
                 if (file_exists(public_path($arr))) {
-                    $return .= HTML::script($arr);
+                    $return .= Html::script($arr);
                 }
             }
         }
         /*
          * File of Sir Trevor JS
          */
-        $return .= HTML::script($config['path']."sir-trevor.min.js")
-            .HTML::script($config['path']."locales/".$config['language'].".js");
+        $return .= Html::script($config['path'] . 'sir-trevor.min.js')
+            .Html::script($config['path'] . 'locales/' . $config['language'] . ".js");
 
-        return $return.View::make("sirtrevorjs::js", ["config" => $config]);
+        return $return . view()->make('sirtrevorjs::js', ['config' => $config]);
     }
 
     /**
@@ -173,19 +173,19 @@ class SirTrevorJs
      * 2 - config file
      * 3 - default
      *
-     * @param array $params Personnalized params
+     * @param array $params Personalized params
      *
      * @return array
      * @static
      */
-    public static function config($params = null)
+    public static function config($params = null): array
     {
         // params in config file
-        $config = Config::get("sirtrevorjs::sir-trevor-js");
+        $config = config()->get('sirtrevorjs::sir-trevor-js');
 
-/*
- * Block types
- */
+        /*
+         * Block types
+         */
         // params
         if (isset($params['blocktypes']) && !empty($params['blocktypes']) && is_array($params['blocktypes'])) {
             $blocktypes = $params['blocktypes'];
@@ -198,13 +198,13 @@ class SirTrevorJs
         }
 
         return [
-            "path"       => $config['path'],
-            "script"     => $config['script'],
-            "blocktypes" => "'".implode("', '", $blocktypes)."'",
-            "class"      => self::defineParam("class", $params),
-            "language"   => self::defineParam("language", $params, $config),
-            "uploadUrl"  => self::defineParam("uploadUrl", $params, $config),
-            "tweetUrl"   => self::defineParam("tweetUrl", $params, $config),
+            'path'          => $config['path'],
+            'script'        => $config['script'],
+            'blocktypes'    => "'" . implode("', '", $blocktypes) . "'",
+            'class'         => self::defineParam('class', $params),
+            'language'      => self::defineParam('language', $params, $config),
+            'uploadUrl'     => self::defineParam('uploadUrl', $params, $config),
+            'tweetUrl'      => self::defineParam('tweetUrl', $params, $config),
         ];
     }
 
@@ -217,13 +217,13 @@ class SirTrevorJs
      *
      * @return string
      */
-    private static function defineParam($type, $params, $config = [])
+    private static function defineParam($type, $params, $config = []): string
     {
-        // params
         if (isset($params[$type]) && !empty($params[$type])) {
             return $params[$type];
-        // config
-        } elseif (isset($config[$type]) && !empty($config[$type])) {
+        }
+
+        if (isset($config[$type]) && !empty($config[$type])) {
             return $config[$type];
         }
 
@@ -238,10 +238,11 @@ class SirTrevorJs
      *
      * @return string
      * @static
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public static function render($text)
+    public static function render($text): string
     {
-        $converter = new SirTrevorJsConverter();
+        $converter = app()->make(SirTrevorJsConverter::class);
 
         return $converter->toHtml($text);
     }
@@ -254,21 +255,21 @@ class SirTrevorJs
      * @return string Url of image
      * @static
      */
-    public static function findImage($text)
+    public static function findImage($text): string
     {
         $array = json_decode($text, true);
 
         if (!isset($array['data'])) {
-            return;
+            return '';
         }
 
         foreach ($array['data'] as $arr) {
-            if ($arr['type'] === "image" && isset($arr['data']['file']['url'])) {
+            if ($arr['type'] === 'image' && isset($arr['data']['file']['url'])) {
                 return $arr['data']['file']['url'];
             }
         }
 
-        return;
+        return '';
     }
 
     /**
@@ -286,7 +287,7 @@ class SirTrevorJs
     {
         $array = json_decode($text, true);
 
-        if (!isset($array['data']) || (int) $nbr === 0) {
+        if ((int)$nbr === 0 || !isset($array['data'])) {
             return;
         }
 
@@ -294,10 +295,10 @@ class SirTrevorJs
         $_nbr = 1;
 
         foreach ($array['data'] as $arr) {
-            if ($arr['type'] == $blocktype) {
+            if ($arr['type'] === $blocktype) {
                 $return[] = $arr['data'];
 
-                if ($_nbr == $nbr) {
+                if ($_nbr === $nbr) {
                     break;
                 }
 
@@ -305,7 +306,7 @@ class SirTrevorJs
             }
         }
 
-        if (empty($return) || $output === "array") {
+        if (empty($return) || $output === 'array') {
             return $return;
         }
 
@@ -324,6 +325,6 @@ class SirTrevorJs
      */
     public static function first($text, $blocktype, $output = "json")
     {
-        return self::find($text, $blocktype, $output, 1);
+        return static::find($text, $blocktype, $output, 1);
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -8,7 +10,6 @@
 namespace Caouecs\Sirtrevorjs;
 
 use Illuminate\Support\ServiceProvider;
-use View;
 
 /**
  * Sir Trevor Js service provider.
@@ -16,27 +17,18 @@ use View;
 class SirtrevorjsServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Bootstrap the application events.
      */
     public function boot()
     {
-        include __DIR__.'/../../routes.php';
-
-        $this->loadViewsFrom(__DIR__.'/../../views/', 'sirtrevorjs');
-    }
-
-    /**
-     * Register the service provider.
-     */
-    public function register()
-    {
-        //
+        $this->publishes([
+            __DIR__ . '/config/sir-trevor-js.php' => config_path('sirtrevorjs.php'),
+        ]);
+        $this->mergeConfigFrom(__DIR__ . '/config/sir-trevor-js.php', 'sirtrevorjs');
+        $this->loadRoutesFrom(__DIR__ . '/../../routes.php');
+        $this->loadViewsFrom(__DIR__ . '/../../views/', 'sirtrevorjs');
+        $this->publishes([
+            __DIR__ . '/../../views' => resource_path('views/vendor/sirtrevorjs'),
+        ]);
     }
 }

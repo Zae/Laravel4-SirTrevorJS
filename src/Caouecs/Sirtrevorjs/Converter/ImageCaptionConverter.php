@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Laravel-SirTrevorJs.
  *
@@ -8,6 +10,7 @@
 namespace Caouecs\Sirtrevorjs\Converter;
 
 use Caouecs\Sirtrevorjs\Contracts\ConverterInterface;
+use Illuminate\Support\Arr;
 
 /**
  * Images for Sir Trevor Js.
@@ -20,26 +23,26 @@ class ImageCaptionConverter extends ImageConverter implements ConverterInterface
      * @var array
      */
     protected $types = [
-        "image",
-        "gettyimages",
-        "pinterest",
-        "image_caption"
+        'image',
+        'gettyimages',
+        'pinterest',
+        'image_caption'
     ];
 
     /**
      * Converts the image to html.
      *
-     * @return string
+     * @return string|View
      */
-    public function image_captionToHtml()
+    public function imageCaptionToHtml()
     {
-        if (is_null(array_get($this->data, 'file.url'))) {
-            return;
+        if (Arr::get($this->data, 'file.url') === null) {
+            return '';
         }
 
-        return $this->view("image.image", [
-            "url"  => array_get($this->data, 'file.url'),
-            "text" => array_get($this->data, 'text'),
+        return $this->view('image.image', [
+            'url'   => Arr::get($this->data, 'file.url'),
+            'text'  => Arr::get($this->data, 'text'),
         ]);
     }
 }
