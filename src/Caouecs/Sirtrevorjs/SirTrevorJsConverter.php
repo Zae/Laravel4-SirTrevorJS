@@ -67,7 +67,7 @@ class SirTrevorJsConverter
     {
         // convert the json to an associative array
         $input = json_decode($json, true);
-        $html  = null;
+        $html  = '';
         $codejs = null;
 
         if (is_array($input)) {
@@ -80,7 +80,11 @@ class SirTrevorJsConverter
 
                 $class = "Caouecs\\Sirtrevorjs\\Converter\\" . $this->blocks[$block['type']] . 'Converter';
 
-                $converter = app()->make($class, [$this->config, $block]);
+                $converter = app()->make($class, [
+                    'config' => $this->config,
+                    'data' => $block
+                ]);
+
                 $html .= $converter->render($codejs);
             }
 

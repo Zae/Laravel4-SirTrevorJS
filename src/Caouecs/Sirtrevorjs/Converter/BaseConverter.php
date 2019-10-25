@@ -66,7 +66,7 @@ class BaseConverter
         if (in_array($this->type, $this->types, true)) {
             $method = Str::camel($this->type) . 'ToHtml';
 
-            return $this->$method($codejs);
+            return (string)$this->$method($codejs);
         }
 
         return '';
