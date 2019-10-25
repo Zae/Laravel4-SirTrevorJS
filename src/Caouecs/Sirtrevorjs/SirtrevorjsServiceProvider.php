@@ -22,13 +22,11 @@ class SirtrevorjsServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '../../config/sir-trevor-js.php' => config_path('sirtrevorjs.php'),
-        ]);
-        $this->mergeConfigFrom(__DIR__ . '../..//config/sir-trevor-js.php', 'sirtrevorjs');
-        $this->loadRoutesFrom(__DIR__ . '/../../routes.php');
-        $this->loadViewsFrom(__DIR__ . '/../../views/', 'sirtrevorjs');
-        $this->publishes([
+            __DIR__ . '/../../config/sir-trevor-js.php' => config_path('sirtrevorjs.php'),
             __DIR__ . '/../../views' => resource_path('views/vendor/sirtrevorjs'),
         ]);
+        $this->mergeConfigFrom(__DIR__ . '/../../config/sir-trevor-js.php', 'sirtrevorjs');
+        $this->loadRoutesFrom(__DIR__ . '/../../routes.php');
+        $this->loadViewsFrom(__DIR__ . '/../../views/', 'sirtrevorjs');
     }
 }
