@@ -48,6 +48,11 @@ class SirTrevorJsConverter
     ];
 
     /**
+     * @var mixed
+     */
+    private $config;
+
+    /**
      * @param Repository $config
      */
     public function __construct(Repository $config)
@@ -63,8 +68,12 @@ class SirTrevorJsConverter
      * @return string
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function toHtml($json): string
+    public function toHtml(?string $json): string
     {
+        if ($json === null) {
+            return '';
+        }
+
         // convert the json to an associative array
         $input = json_decode($json, true);
         $html  = '';
