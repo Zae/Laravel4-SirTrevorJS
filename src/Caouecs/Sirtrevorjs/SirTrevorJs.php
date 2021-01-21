@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Caouecs\Sirtrevorjs;
 
+use Html;
 use function is_array;
 
 /**
@@ -27,7 +28,7 @@ class SirTrevorJs
     /**
      * Block types.
      *
-     * @var string
+     * @var string[]
      * @static
      */
     protected static $blocktypes = ['Text', 'List', 'Quote', 'Image', 'Video', 'Tweet', 'Heading'];
@@ -178,7 +179,7 @@ class SirTrevorJs
      * @return array
      * @static
      */
-    public static function config($params = null): array
+    public static function config(array $params = []): array
     {
         // params in config file
         $config = config()->get('sirtrevorjs::sir-trevor-js');
@@ -273,22 +274,22 @@ class SirTrevorJs
     }
 
     /**
-     * Find occurences of a type of block in a text.
+     * Find occurrences of a type of block in a text.
      *
      * @param string $text
      * @param string $blocktype
      * @param string $output    json or array
      * @param int    $nbr       Number of occurences ( 0 = all )
      *
-     * @return array | boolean Returns list of blocks in an array if exists. Else, returns false
+     * @return array|bool|string|null Returns list of blocks in an array if exists. Else, returns false
      * @static
      */
-    public static function find($text, $blocktype, $output = "json", $nbr = 0)
+    public static function find(string $text, string $blocktype, string $output = "json", int $nbr = 0)
     {
         $array = json_decode($text, true);
 
-        if ((int)$nbr === 0 || !isset($array['data'])) {
-            return;
+        if ($nbr === 0 || !isset($array['data'])) {
+            return false;
         }
 
         $return = null;
@@ -314,16 +315,16 @@ class SirTrevorJs
     }
 
     /**
-     * Find first occurence of a type of block in a text.
+     * Find first occurrence of a type of block in a text.
      *
      * @param string $text
      * @param string $blocktype
      * @param string $output    json or array
      *
-     * @return array | boolean Returns list of blocks in an array if exists. Else, returns false
+     * @return array|bool|string|null Returns list of blocks in an array if exists. Else, returns false
      * @static
      */
-    public static function first($text, $blocktype, $output = "json")
+    public static function first(string $text, string $blocktype, string $output = "json")
     {
         return static::find($text, $blocktype, $output, 1);
     }

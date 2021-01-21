@@ -15,6 +15,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
 use function in_array;
 use function is_array;
+use function is_null;
 
 /**
  * Videos for Sir Trevor Js.
@@ -24,21 +25,21 @@ class VideoConverter extends BaseConverter implements ConverterInterface
     /**
      * Provider name.
      *
-     * @var string
+     * @var ?string
      */
     protected $provider = null;
 
     /**
      * Remote id.
      *
-     * @var string
+     * @var ?string
      */
     protected $remote_id = null;
 
     /**
      * Caption.
      *
-     * @var string
+     * @var ?string
      */
     protected $caption = null;
 
@@ -101,7 +102,7 @@ class VideoConverter extends BaseConverter implements ConverterInterface
      */
     public function __construct(array $config, array $data)
     {
-        if (!is_array($data) || !isset($data['data']['source']) || !isset($data['data']['remote_id'])) {
+        if (!isset($data['data']['source'], $data['data']['remote_id'])) {
             throw new Exception('Need an array with provider and remote_id', 1);
         }
 
@@ -119,13 +120,13 @@ class VideoConverter extends BaseConverter implements ConverterInterface
      *
      * @param array $codejs Array of Js
      *
-     * @return string:View
+     * @return string|View
      */
-    public function videoToHtml(&$codejs)
+    public function videoToHtml(array &$codejs)
     {
         if (in_array($this->provider, $this->providers, true)) {
             // JS Code
-            if (isset($this->codejs[$this->provider])) {
+            if (isset($this->codejs[$this->provider]) && !is_null($this->provider)) {
                 $codejs[$this->provider] = $this->codejs[$this->provider];
             }
 

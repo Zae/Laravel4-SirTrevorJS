@@ -67,14 +67,14 @@ class ImageConverter extends BaseConverter implements ConverterInterface
      *
      * @return string|View
      */
-    public function pinterestToHtml(&$codejs)
+    public function pinterestToHtml(array &$codejs)
     {
         if ($this->data['provider'] === 'pin') {
             $codejs['pin'] = '<script type="text/javascript" async src="//assets.pinterest.com/js/pinit.js">'
                 .'</script>';
 
             return $this->view('image.pin', [
-                'remote_id' => $this->data['remote_id'],
+                'remote_id' => $this->data['remote_id'] ?? null,
             ]);
         }
 

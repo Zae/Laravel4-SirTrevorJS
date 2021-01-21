@@ -30,12 +30,12 @@ class PresentationConverter extends BaseConverter implements ConverterInterface
     /**
      * Slideshare.
      *
-     * @return View;
+     * @return View
      */
     public function slideshareToHtml(): View
     {
         return $this->view('presentation.slideshare', [
-            'remote_id' => $this->data['remote_id'],
+            'remote_id' => $this->data['remote_id'] ?? null,
         ]);
     }
 
@@ -46,12 +46,12 @@ class PresentationConverter extends BaseConverter implements ConverterInterface
      *
      * @return View
      */
-    public function issuuToHtml(&$codejs): View
+    public function issuuToHtml(array &$codejs): View
     {
         $codejs['issuu'] = '<script type="text/javascript" src="//e.issuu.com/embed.js" async="true"></script>';
 
         return $this->view('presentation.issuu', [
-            'remote_id' => $this->data['remote_id'],
+            'remote_id' => $this->data['remote_id'] ?? null,
         ]);
     }
 }

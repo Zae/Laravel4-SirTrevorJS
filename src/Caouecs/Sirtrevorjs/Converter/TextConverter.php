@@ -42,14 +42,14 @@ class TextConverter extends BaseConverter implements ConverterInterface
     /**
      * Construct.
      *
-     * @param array $config Config of Sir Trevor Js
-     * @param array $data   Array of data
+     * @param ParsedownExtra $markdown
+     * @param array          $config Config of Sir Trevor Js
+     * @param array          $data   Array of data
      *
-     * @throws \Exception
      */
-    public function __construct($config, $data)
+    public function __construct(ParsedownExtra $markdown, array $config, array $data)
     {
-        $this->markdown = app()->make(ParsedownExtra::class);
+        $this->markdown = $markdown;
         $this->markdown->setBreaksEnabled(true);
 
         parent::__construct($config, $data);
@@ -62,12 +62,12 @@ class TextConverter extends BaseConverter implements ConverterInterface
      */
     public function textToHtml(): View
     {
-        if (isset($this->data['isHtml']) && $this->data['isHtml']) {
-            $text = $this->data['text'];
-        } else {
+        $text = $this->data['text'] ?? '';
+
+        if (!isset($this->data['isHtml']) || !($this->data['isHtml'])) {
             /** This replacement happens to prevent a spacing issues between headers (**header**) in a markdown text */
-            $this->data['text'] = str_replace("**\n", '** <br>', $this->data['text']);
-            $text = $this->markdown->text($this->data['text']);
+            $text = str_replace("**\n", '** <br>', $text);
+            $text = $this->markdown->text($text);
         }
 
         return $this->view('text.text', [
@@ -92,8 +92,10 @@ class TextConverter extends BaseConverter implements ConverterInterface
      */
     public function headingToHtml(): View
     {
+        $text = $this->data['text'] ?? '';
+
         return $this->view('text.heading', [
-            'text' => $this->markdown->text($this->data['text']),
+            'text' => $this->markdown->text($text),
         ]);
     }
 
@@ -104,10 +106,13 @@ class TextConverter extends BaseConverter implements ConverterInterface
      */
     public function blockquoteToHtml(): View
     {
-        // remove the indent thats added by Sir Trevor
+        $cite = $this->data['cite'] ?? null;
+        $text = $this->data['text'] ?? '';
+
+        // remove the indent that's added by Sir Trevor
         return $this->view('text.blockquote', [
-            'cite' => $this->data['cite'],
-            'text' => $this->markdown->text(ltrim($this->data['text'], '>')),
+            'cite' => $cite,
+            'text' => $this->markdown->text(ltrim($text, '>')),
         ]);
     }
 

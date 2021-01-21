@@ -12,12 +12,15 @@
   "require": {
     "php": ">=7.2",
     "ext-json": "*",
-    "laravel/framework": "^5.0 | ^6.0 | ^7.0",
+    "laravel/framework": "^5.0 | ^6.0 | ^7.0 | ^8.0",
     "erusev/parsedown-extra": "~0.2",
     "laravelcollective/html": "^5.0 | ^6.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^8.0.0 | ^9.0.0"
+    "phpunit/phpunit": "^8.0.0 | ^9.0.0",
+    "vimeo/psalm": "^4.3",
+    "psalm/plugin-laravel": "^1.0",
+    "orchestra/testbench": "^6.0"
   },
   "autoload": {
     "psr-4": {
@@ -25,9 +28,14 @@
     }
   },
   "autoload-dev": {
-    "classmap": [
-      "test"
-    ]
+    "psr-4": {
+      "Caouecs\\Tests\\Unit\\": "test/Caouecs/Tests/Unit"
+    }
+  },
+  "scripts": {
+    "psalm": "@php vendor/bin/psalm --no-diff --threads=8",
+    "test": "@php vendor/bin/phpunit",
+    "coverage": "@php -dpcov.enabled=1 -dpcov.directory=src -dpcov.exclude=\"~(vendor|tests|node_modules|views)~\" vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml --coverage-html=coverage-html"
   },
   "extra": {
     "laravel": {

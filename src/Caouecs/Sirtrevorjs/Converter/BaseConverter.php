@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -12,33 +13,37 @@ namespace Caouecs\Sirtrevorjs\Converter;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+
 use function in_array;
 
 /**
  * Base of converters for Sir Trevor Js.
  */
-class BaseConverter
+abstract class BaseConverter
 {
     /**
      * Config of Sir Trevor Js.
      *
      * @var array
      */
-    protected $config = null;
+    protected $config = [];
 
     /**
      * Type of block.
      *
      * @var string
      */
-    protected $type = null;
+    protected $type = '';
 
     /**
      * Data of block.
      *
      * @var array
      */
-    protected $data = null;
+    protected $data = [];
+
+    /** @var string[] */
+    protected $types = [];
 
     /**
      * Construct.
@@ -61,7 +66,7 @@ class BaseConverter
      *
      * @return string
      */
-    public function render(&$codejs): string
+    public function render(array &$codejs): string
     {
         if (in_array($this->type, $this->types, true)) {
             $method = Str::camel($this->type) . 'ToHtml';

@@ -34,7 +34,7 @@ class ModelisationConverter extends BaseConverter implements ConverterInterface
     public function sketchfabToHtml(): View
     {
         return $this->view('modelisation.sketchfab', [
-            'remote_id' => $this->data['remote_id'],
+            'remote_id' => $this->data['remote_id'] ?? null,
         ]);
     }
 }

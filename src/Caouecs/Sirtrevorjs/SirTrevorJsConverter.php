@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Caouecs\Sirtrevorjs;
 
+use Caouecs\Sirtrevorjs\Contracts\ConverterInterface;
 use Illuminate\Config\Repository;
 use function array_key_exists;
 use function is_array;
@@ -42,6 +43,7 @@ class SirTrevorJsConverter
         'soundcloud'    => 'Sound',
         'spotify'       => 'Sound',
         'text'          => 'Text',
+        'tweet'         => 'Social',
         'video'         => 'Video',
         'list'          => 'Text',
         'image_caption' => 'ImageCaption',
@@ -77,7 +79,7 @@ class SirTrevorJsConverter
         // convert the json to an associative array
         $input = json_decode($json, true);
         $html  = '';
-        $codejs = null;
+        $codejs = [];
 
         if (is_array($input)) {
             // loop trough the data blocks
@@ -94,13 +96,13 @@ class SirTrevorJsConverter
                     'data' => $block
                 ]);
 
-                $html .= $converter->render($codejs);
+                if ($converter instanceof ConverterInterface) {
+                    $html .= $converter->render($codejs);
+                }
             }
 
             // code js
-            if (is_array($codejs)) {
-                $html .= implode($codejs);
-            }
+            $html .= implode($codejs);
         }
 
         return $html;

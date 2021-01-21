@@ -15,9 +15,9 @@ namespace Caouecs\Sirtrevorjs\Contracts;
 interface ConverterInterface
 {
     /**
-     * @param $codejs
+     * @param array $codejs
      *
-     * @return mixed
+     * @return string
      */
-    public function render(&$codejs);
+    public function render(array &$codejs): string;
 }

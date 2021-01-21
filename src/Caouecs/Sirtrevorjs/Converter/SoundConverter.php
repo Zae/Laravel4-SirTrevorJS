@@ -20,7 +20,7 @@ class SoundConverter extends BaseConverter implements ConverterInterface
     /**
      * List of types for sound.
      *
-     * @var array
+     * @var string[]
      */
     protected $types = [
         'soundcloud',
@@ -30,14 +30,14 @@ class SoundConverter extends BaseConverter implements ConverterInterface
     /**
      * Soundcloud block.
      *
-     * @return View;
+     * @return View
      */
     public function soundcloudToHtml(): View
     {
         $theme = (isset($this->config['soundcloud']) && $this->config['soundcloud'] === 'full') ? 'full' : 'small';
 
         return $this->view('sound.soundcloud.' . $theme, [
-            'remote' => $this->data['remote_id'],
+            'remote' => $this->data['remote_id'] ?? null,
         ]);
     }
 
@@ -49,8 +49,8 @@ class SoundConverter extends BaseConverter implements ConverterInterface
     public function spotifyToHtml(): View
     {
         return $this->view('sound.spotify', [
-            'remote'    => $this->data['remote_id'],
-            'options'   => $this->config['spotify'],
+            'remote'    => $this->data['remote_id'] ?? null,
+            'options'   => $this->config['spotify'] ?? null,
         ]);
     }
 }

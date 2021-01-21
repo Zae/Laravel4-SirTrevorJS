@@ -32,7 +32,7 @@ class ImageCaptionConverter extends ImageConverter implements ConverterInterface
     /**
      * Converts the image to html.
      *
-     * @return string|View
+     * @return string|\Illuminate\Contracts\View\View
      */
     public function imageCaptionToHtml()
     {

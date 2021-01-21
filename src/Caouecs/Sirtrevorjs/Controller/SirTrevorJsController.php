@@ -11,7 +11,10 @@ namespace Caouecs\Sirtrevorjs\Controller;
 
 use Illuminate\Config\Repository;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use \Illuminate\Routing\Controller;
+
+use function is_null;
 
 /**
  * Controller Sir Trevor Js
@@ -40,9 +43,9 @@ class SirTrevorJsController extends Controller
      *
      * you can define `directory_upload` in config file
      *
-     * @return string Data for Sir Trevor or Error
+     * @param Request $request
      */
-    public function upload(Request $request): ?string
+    public function upload(Request $request): void
     {
         if ($request->hasFile('attachment')) {
             // config
@@ -52,7 +55,11 @@ class SirTrevorJsController extends Controller
             $file = $request->file('attachment');
 
             // Problem on some configurations
-            $file = (!method_exists($file, 'getClientOriginalName')) ? $file['file'] : $file;
+            $file = (!method_exists($file, 'getClientOriginalName') && isset($file['file'])) ? $file['file'] : $file;
+
+            if (!$file instanceof UploadedFile) {
+                return;
+            }
 
             // filename
             $filename = $file->getClientOriginalName();
@@ -60,10 +67,13 @@ class SirTrevorJsController extends Controller
             // suffix if file exists
             $suffix = '01';
 
-            // verif if file exists
+            // verify if file exists
             while (file_exists(public_path($config['directory_upload']) . '/' . $filename)) {
                 $filename = $suffix . '_' . $filename;
 
+                /**
+                 * @psalm-suppress StringIncrement
+                 */
                 $suffix++;
 
                 if ($suffix < 10) {

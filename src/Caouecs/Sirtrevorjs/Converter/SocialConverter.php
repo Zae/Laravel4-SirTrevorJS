@@ -31,7 +31,7 @@ class SocialConverter extends BaseConverter implements ConverterInterface
      *
      * @param array $codejs Array of js
      *
-     * @return View;
+     * @return View
      */
     public function facebookToHtml(&$codejs): View
     {
