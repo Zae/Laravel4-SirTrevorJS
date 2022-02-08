@@ -63,10 +63,10 @@ class TextConverter extends BaseConverter implements ConverterInterface
     public function textToHtml(): View
     {
         if (isset($this->data['isHtml']) && $this->data['isHtml']) {
-            $text = $this->data['text'];
+            $text = $this->data['text'] ?? '';
         } else {
             /** This replacement happens to prevent a spacing issues between headers (**header**) in a markdown text */
-            $this->data['text'] = str_replace("**\n", '** <br>', $this->data['text']);
+            $this->data['text'] = str_replace("**\n", '** <br>', $this->data['text'] ?? '');
             $text = $this->markdown->text($this->data['text']);
         }
 
@@ -93,7 +93,7 @@ class TextConverter extends BaseConverter implements ConverterInterface
     public function headingToHtml(): View
     {
         return $this->view('text.heading', [
-            'text' => $this->markdown->text($this->data['text']),
+            'text' => $this->markdown->text($this->data['text'] ?? ''),
         ]);
     }
 
@@ -106,8 +106,8 @@ class TextConverter extends BaseConverter implements ConverterInterface
     {
         // remove the indent thats added by Sir Trevor
         return $this->view('text.blockquote', [
-            'cite' => $this->data['cite'],
-            'text' => $this->markdown->text(ltrim($this->data['text'], '>')),
+            'cite' => $this->data['cite'] ?? '',
+            'text' => $this->markdown->text(ltrim($this->data['text'] ?? '', '>')),
         ]);
     }
 
